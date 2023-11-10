@@ -1,0 +1,1 @@
+class_name InteractArea3D extends Node

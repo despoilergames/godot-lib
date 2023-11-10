@@ -1,0 +1,1 @@
+class_name InteractRayCast3D extends Node
