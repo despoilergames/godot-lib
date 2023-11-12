@@ -13,3 +13,7 @@ func _physics_process(delta: float) -> void:
 	
 	if apply_move:
 		character.move_and_slide()
+
+
+func get_speed_percentage() -> float:
+	return character.velocity.length_squared() / (speed * speed)
