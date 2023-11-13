@@ -18,11 +18,11 @@ var _current_speed: float = 0
 func _physics_process(delta: float) -> void:
 #	if not character.is_on_floor():
 #		_momentum *= air_control
-	_current_speed = lerp(_current_speed, target_speed(), get_momentum())
+	_current_speed = lerp(_current_speed, target_speed(), minf(1, delta * get_momentum()))
 
 
 func get_momentum() -> float:
-	return (acceleration if move_vector else decceleration) * _acceleration_modifier
+	return (acceleration if move_vector or is_zero_approx(decceleration) else decceleration) * _acceleration_modifier
 
 
 func set_disabled(value: bool) -> void:
