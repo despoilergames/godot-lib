@@ -9,7 +9,10 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	var _momentum = get_momentum()
-	character.velocity = lerp(character.velocity, Vector2(move_vector.x, move_vector.z) * _current_speed, _momentum)
+#	if _momentum >= 1:
+#		character.velocity = Vector2(move_vector.x, move_vector.z) * _current_speed
+#	else:
+	character.velocity = lerp(character.velocity, Vector2(move_vector.x, move_vector.z) * _current_speed, minf(1, delta * _momentum))
 	
 	if apply_move:
 		character.move_and_slide()
