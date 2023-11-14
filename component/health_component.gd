@@ -14,7 +14,10 @@ func set_value(amount: float) -> void:
 		if amount == value:
 			return
 		var _value = value
-		value = clampf(amount, 0, max_value)
+		if max_value:
+			value = clampf(amount, 0.0, max_value)
+		else:
+			value = amount
 		if _value != value:
 			changed.emit(value)
 		if value <= 0:
