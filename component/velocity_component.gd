@@ -87,3 +87,11 @@ func set_move_vector_2d(vector: Vector2) -> void:
 
 func clear_move_vector() -> void:
 	move_vector = Vector3.ZERO
+
+
+func enable() -> void:
+	disabled = false
+
+
+func disable() -> void:
+	disabled = true
