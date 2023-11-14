@@ -8,3 +8,15 @@ func apply_damage(amount: float) -> void:
 		return
 	
 	health_component.remove(amount)
+
+
+func enable() -> void:
+	for child in get_children():
+		if child is CollisionShape2D:
+			child.disabled = false
+
+
+func disable() -> void:
+	for child in get_children():
+		if child is CollisionShape2D:
+			child.disabled = true
