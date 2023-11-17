@@ -1,11 +1,12 @@
 class_name NodeSpawner2D extends Marker2D
 
+@export var disabled: bool = false
 @export var scene: PackedScene
 @export var spawn_on_ready: bool = false
 @export var amount: int = 1
 @export var delay: float
 @export var interval: float
-
+@export var autostart: bool = false
 
 @onready var timer := Timer.new()
 
@@ -14,13 +15,16 @@ func _ready() -> void:
 	timer.autostart = false
 	timer.one_shot = false
 	timer.timeout.connect(spawn)
+	timer.wait_time = interval
 	add_child(timer)
+	
+	if disabled:
+		return
 	
 	if spawn_on_ready:
 		spawn()
 	
-	if interval:
-		timer.wait_time = interval
+	if interval and autostart:
 		start()
 
 

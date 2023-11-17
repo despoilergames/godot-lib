@@ -12,7 +12,7 @@ func _physics_process(delta: float) -> void:
 	angle = 0
 	
 	for collider in get_overlapping_areas():
-		angle += get_angle_to(collider.global_position)
+		angle += get_angle_to(collider.global_position) / global_position.distance_to(collider.global_position)
 	
 	if angle and velocity_component:
 		var vector := Vector2.LEFT.rotated(angle).normalized()
@@ -32,4 +32,4 @@ func disable() -> void:
 	
 	for child in get_children():
 		if child is CollisionShape2D:
-			child.disabled = true
+			child.set_deferred("disabled", true)

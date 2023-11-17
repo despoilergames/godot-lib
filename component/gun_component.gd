@@ -75,6 +75,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func pull_trigger() -> void:
+	if is_trigger_pulled:
+		return
+	
 	is_trigger_pulled = true
 	if state == State.READY:
 		change_state(State.TRIGGER_PULLED)
