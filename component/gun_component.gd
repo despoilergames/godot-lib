@@ -8,6 +8,8 @@ signal aim_added
 signal aim_removed
 signal recoiled(vector)
 signal cycled
+signal cycle_started
+signal emptied
 
 @export var disabled: bool = true
 @export var handle_input: bool = true
@@ -28,6 +30,8 @@ signal cycled
 @export var shoot_action_name: StringName
 @export var next_mode_action_name: StringName
 @export var recoil_rof_reset_multiplier: float = 2
+@export var ammo: int = 0
+@export var ammo_cost: int = 1
 
 @onready var state = default_state
 
@@ -136,17 +140,23 @@ func change_state(new_state: State) -> void:
 		State.READY: pass
 		State.TRIGGER_PULLED:
 			# if no ammo goto empty
-#			change_state(State.SHOOT)
-			next_state = State.SHOOT
+			if ammo <= 0:
+				next_state = State.READY
+			else:
+				next_state = State.SHOOT
 		State.CYCLE:
+			cycle_started.emit()
 			await get_tree().create_timer(_rpm).timeout
 			cycled.emit()
 			# if no ammo goto empty state
-			if is_trigger_pulled and mode == Mode.FULL_AUTO: # check mode
+			if ammo <= 0:
+				emptied.emit()
+			if is_trigger_pulled and mode == Mode.FULL_AUTO and ammo >= ammo_cost: # check mode
 				next_state = State.SHOOT
 			else:
 				next_state = State.READY
 		State.SHOOT:
+			ammo -= ammo_cost
 			shot.emit()
 			next_state = State.CYCLE
 	
