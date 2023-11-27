@@ -30,15 +30,22 @@ func _ready() -> void:
 
 func spawn() -> void:
 	for i in amount:
-		_spawn()
+		_spawn(i)
 		if delay:
 			await get_tree().create_timer(delay).timeout
 
 
-func _spawn() -> void:
+func _spawn(index: int = -1, properties: Dictionary = {}) -> void:
+	var node = _create()
+	for property in properties.keys():
+		node.set(property, properties.get(property))
+	get_tree().get_current_scene().add_child.call_deferred(node)
+
+
+func _create() -> Node2D:
 	var node = scene.instantiate()
 	node.position = global_position
-	get_tree().get_current_scene().add_child.call_deferred(node)
+	return node
 
 
 func start() -> void:
