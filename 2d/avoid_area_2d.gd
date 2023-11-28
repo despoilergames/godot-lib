@@ -5,7 +5,7 @@ class_name AvoidArea2D extends Area2D
 
 var angle: float = 0
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if disabled:
 		return
 	
