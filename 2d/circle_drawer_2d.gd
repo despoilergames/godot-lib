@@ -29,9 +29,17 @@ class_name CircleDrawer2D extends Node2D
 	set(value):
 		points = value
 		queue_redraw()
-@export_range(0, 1) var start_position: float = 0:
+@export_range(-1, 1) var start_position: float = 0:
 	set(value):
 		start_position = value
+		queue_redraw()
+@export var use_background: bool = false:
+	set(value):
+		use_background = value
+		queue_redraw()
+@export var background_color: Color = Color.BLACK:
+	set(value):
+		background_color = value
 		queue_redraw()
 @export var use_aliasing: bool = true:
 	set(value):
@@ -55,6 +63,12 @@ func _draw() -> void:
 			draw_arc(Vector2.ZERO, radius, _start_angle, _end_angle, points, border_color, border_width, use_aliasing)
 		else:
 			draw_circle(Vector2.ZERO, radius + border_width, border_color)
+	
+	if use_background:
+		if hollow:
+			draw_arc(Vector2.ZERO, radius, 0, TAU, points, background_color, width, use_aliasing)
+		else:
+			draw_circle(Vector2.ZERO, radius, background_color)
 	
 	if hollow:
 		draw_arc(Vector2.ZERO, radius, _start_angle, _end_angle, points, color, width, use_aliasing)

@@ -32,6 +32,7 @@ signal emptied
 @export var recoil_rof_reset_multiplier: float = 2
 @export var ammo: int = 0
 @export var ammo_cost: int = 1
+@export var burst_amount: int = 3
 
 @onready var state = default_state
 
@@ -48,7 +49,7 @@ var mode_name:
 
 var _shot_count: int = 0
 var _shot_timer: float = -1
-
+var _burst_count: int = 0
 
 
 func _ready() -> void:
@@ -137,7 +138,8 @@ func change_state(new_state: State) -> void:
 	match new_state:
 		State.SAFE: pass
 		State.EMPTY: pass
-		State.READY: pass
+		State.READY:
+			_burst_count = 0
 		State.TRIGGER_PULLED:
 			# if no ammo goto empty
 			if ammo <= 0:
@@ -149,15 +151,19 @@ func change_state(new_state: State) -> void:
 			await get_tree().create_timer(_rpm).timeout
 			cycled.emit()
 			# if no ammo goto empty state
-			if ammo <= 0:
-				emptied.emit()
-			if is_trigger_pulled and mode == Mode.FULL_AUTO and ammo >= ammo_cost: # check mode
+			if mode == Mode.BURST and _burst_count < burst_amount and ammo >= ammo_cost:
+				next_state = State.SHOOT
+			elif is_trigger_pulled and mode == Mode.FULL_AUTO and ammo >= ammo_cost: # check mode
 				next_state = State.SHOOT
 			else:
 				next_state = State.READY
 		State.SHOOT:
+			if mode == Mode.BURST:
+				_burst_count += 1
 			ammo -= ammo_cost
 			shot.emit()
+			if ammo <= 0:
+				emptied.emit()
 			next_state = State.CYCLE
 	
 	state = new_state

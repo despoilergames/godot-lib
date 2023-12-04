@@ -20,6 +20,13 @@ func _ready() -> void:
 	if disabled:
 		return
 	
+	if spawn_interval:
+		timer.autostart = false
+		timer.one_shot = false
+		timer.timeout.connect(spawn)
+		timer.wait_time = spawn_interval
+		add_child(timer)
+	
 	if start_delay:
 		await get_tree().create_timer(start_delay).timeout
 	
@@ -27,11 +34,7 @@ func _ready() -> void:
 		spawn()
 	
 	if spawn_interval and autostart:
-		timer.autostart = autostart
-		timer.one_shot = false
-		timer.timeout.connect(spawn)
-		timer.wait_time = spawn_interval
-		add_child(timer)
+		timer.start()
 
 
 func spawn() -> void:
