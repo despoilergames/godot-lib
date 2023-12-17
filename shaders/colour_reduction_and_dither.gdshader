@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform float colors : hint_range(1.0, 32.0);
+uniform float colors : hint_range(1.0, 256.0);
 uniform float dither : hint_range(0.0, 1.0);
 uniform sampler2D SCREEN_TEXTURE: hint_screen_texture, filter_linear_mipmap;
 
