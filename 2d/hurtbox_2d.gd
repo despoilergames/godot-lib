@@ -4,14 +4,16 @@ class_name Hurtbox2D extends Area2D
 @export var interval: float
 @export var damage_on_enter: bool = true
 
-var _timer: Timer = Timer.new()
+var _timer: Timer
 var _areas = []
 
 func _ready() -> void:
-	_timer.wait_time = interval
-	_timer.timeout.connect(_on_timer_timeout)
-	_timer.autostart = false
-	add_child(_timer)
+	if interval:
+		_timer = Timer.new()
+		_timer.wait_time = interval
+		_timer.timeout.connect(_on_timer_timeout)
+		_timer.autostart = false
+		add_child(_timer)
 	
 	area_entered.connect(_on_area_entered)
 	area_exited.connect(_on_area_exited)
