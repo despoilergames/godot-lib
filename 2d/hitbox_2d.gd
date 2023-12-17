@@ -1,13 +1,14 @@
 class_name Hitbox2D extends Area2D
 
-@export var health_component: HealthComponent
+@export var health_pip_component: HealthPipComponent
+@export var health_pool_component: HealthPoolComponent
 
 
 func apply_damage(amount: float) -> void:
-	if not health_component:
-		return
-	
-	health_component.remove(amount)
+	if health_pip_component:
+		health_pip_component.remove(amount)
+	if health_pool_component:
+		health_pool_component.remove(amount)
 
 
 func enable() -> void:
