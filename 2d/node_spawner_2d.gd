@@ -1,5 +1,7 @@
 class_name NodeSpawner2D extends Marker2D
 
+signal node_spawned(node)
+
 @export var disabled: bool = false
 @export var scene: PackedScene
 @export var spawn_on_ready: bool = false
@@ -9,7 +11,7 @@ class_name NodeSpawner2D extends Marker2D
 @export var spawn_interval: float
 @export var autostart: bool = false
 @export var max_runs: int = 0
-@export var parent_node: Node2D
+@export var parent_node: Node
 @export var random_offset: Vector2
 
 @onready var timer := Timer.new()
@@ -59,6 +61,9 @@ func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
 		parent_node.add_child.call_deferred(node)
 	else:
 		get_tree().get_current_scene().add_child.call_deferred(node)
+	
+	await get_tree().process_frame
+	node_spawned.emit(node)
 
 
 func _create() -> Node2D:
