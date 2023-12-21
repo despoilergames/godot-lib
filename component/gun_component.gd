@@ -38,7 +38,9 @@ signal emptied
 
 var state_name:
 	get:
-		return State.keys()[state]
+		if state:
+			return State.keys()[state]
+		return null
 
 var _rpm: float
 var is_trigger_pulled: bool = false
@@ -53,7 +55,8 @@ var _burst_count: int = 0
 
 
 func _ready() -> void:
-	_rpm = clampf(60.0 / rpm, get_physics_process_delta_time() * 2, 10)
+	if not _rpm:
+		_rpm = get_physics_process_delta_time()
 
 
 func _process(delta: float) -> void:
