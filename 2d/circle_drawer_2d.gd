@@ -50,9 +50,6 @@ class_name CircleDrawer2D extends Node2D
 		hollow = value
 		queue_redraw()
 
-func _ready() -> void:
-	pass
-
 
 func _draw() -> void:
 	var _start_angle = TAU * start_position
