@@ -10,6 +10,7 @@ enum ProcessType { IDLE, PHYSICS }
 @export var font_size: int = 0
 
 var _property_labels: Dictionary = {}
+var _signal_values: Dictionary = {}
 
 func _ready() -> void:
 	if not target:
@@ -44,7 +45,8 @@ func _render() -> void:
 			property = parts[1]
 			if parts.size() == 3:
 				type = parts[2]
-		var property_value = _get_deep(target, property)
+		#var property_value = _get_deep(target, property)
+		var property_value = _get_property_value(property, type)
 		if property_value != null:
 			match type:
 				"int": property_value = "%d" % int(property_value)
@@ -60,10 +62,16 @@ func _render() -> void:
 			_property_labels[property] = label
 
 
-func _get_property_value(key: String) -> Variant:
-	if target:
-		_get_deep(target, key)
-	return null
+func _get_property_value(key: String, type: String = "string") -> Variant:
+	if not target:
+		return null
+	
+	match type:
+		"signal":
+			if not target[key].is_connected(_on_target_signal.bind(key)):
+				target[key].connect(_on_target_signal.bind(key))
+			return _signal_values.get(key)
+		_: return _get_deep(target, key)
 
 
 func _get_deep(element, key: String) -> Variant:
@@ -82,3 +90,7 @@ func _get_deep(element, key: String) -> Variant:
 			TYPE_VECTOR2:
 				return element.call(key)
 		return element.get(key)
+
+
+func _on_target_signal(value, property) -> void:
+	_signal_values[property] = value
