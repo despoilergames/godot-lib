@@ -9,6 +9,10 @@ class_name Primitive2D extends Node2D
 	set(value):
 		size = value
 		queue_redraw()
+@export var rect_size: Vector2 = Vector2.ONE:
+	set(value):
+		rect_size = value
+		queue_redraw()
 @export var points: PackedVector2Array:
 	set(value):
 		points = value
@@ -45,9 +49,9 @@ func _draw() -> void:
 				_points.append(Vector2.UP.rotated((TAU/3)*2) * size)
 			
 			4:
-				_points.append(Vector2(1, 1) * size / 2)
-				_points.append(Vector2(-1, 1) * size / 2)
-				_points.append(Vector2(-1, -1) * size / 2)
-				_points.append(Vector2(1, -1) * size / 2)
+				_points.append(Vector2(1, 1) * rect_size * size / 2)
+				_points.append(Vector2(-1, 1) * rect_size * size / 2)
+				_points.append(Vector2(-1, -1) * rect_size * size / 2)
+				_points.append(Vector2(1, -1) * rect_size * size / 2)
 	
 	draw_primitive(_points, colors, uvs, texture)
