@@ -37,17 +37,17 @@ func _ready() -> void:
 
 
 func set_value(amount: float) -> void:
-		if amount == value:
-			return
-		var _value = value
-		if max_value:
-			value = clampf(amount, 0.0, max_value)
-		else:
-			value = amount
-		if _value != value:
-			changed.emit(value)
-		if value <= 0:
-			depleted.emit()
+	if amount == value:
+		return
+	var _value = value
+	if max_value:
+		value = clampf(amount, 0.0, max_value)
+	else:
+		value = amount
+	if _value != value:
+		changed.emit(value)
+	if value <= 0:
+		depleted.emit()
 
 
 func add(amount: float) -> float:
@@ -98,3 +98,7 @@ func regen_tick() -> void:
 		stop_regen()
 	else:
 		stop_regen()
+
+
+func fill() -> void:
+	value = max_value
