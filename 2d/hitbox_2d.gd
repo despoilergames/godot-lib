@@ -6,7 +6,7 @@ class_name Hitbox2D extends Area2D
 
 func apply_damage(amount: float) -> void:
 	if health_pip_component:
-		health_pip_component.remove(amount)
+		health_pip_component.remove(int(amount))
 	if health_pool_component:
 		health_pool_component.remove(amount)
 
