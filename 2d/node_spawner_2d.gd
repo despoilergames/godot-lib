@@ -13,6 +13,9 @@ signal node_spawned(node)
 @export var max_runs: int = 0
 @export var parent_node: Node
 @export var random_offset: Vector2
+@export var random_rotation: float = 0
+@export var use_current_position: bool = true
+@export var use_current_rotation: bool = true
 
 @onready var timer := Timer.new()
 
@@ -68,9 +71,14 @@ func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
 
 func _create() -> Node2D:
 	var node = scene.instantiate()
-	node.position = global_position
+	if use_current_position:
+		node.position = global_position
+	if use_current_rotation:
+		node.rotation = global_rotation
 	if not random_offset.is_zero_approx():
 		node.position += Vector2(randf_range(-random_offset.x, random_offset.y), randf_range(-random_offset.y, random_offset.y))
+	if not is_zero_approx(random_rotation):
+		node.rotation_degrees += randf_range(-random_rotation, random_rotation)
 	return node
 
 
