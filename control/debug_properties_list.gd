@@ -89,7 +89,11 @@ func _get_deep(element, key: String) -> Variant:
 		match typeof(element):
 			TYPE_VECTOR2:
 				return element.call(key)
-		return element.get(key)
+		if element is Object:
+			if element.has_method(key):
+				return element.call(key)
+			return element.get(key)
+		return null
 
 
 func _on_target_signal(value, property) -> void:

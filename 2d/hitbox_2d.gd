@@ -12,7 +12,6 @@ var _hit_reports: int = 0
 
 func _process(delta: float) -> void:
 	if _hit_reports:
-		prints(_hit_reports)
 		_hit_reports = 0
 
 

@@ -21,7 +21,7 @@ func _physics_process(delta: float) -> void:
 
 
 func _process_shake(delta: float) -> void:
-	if current and not current.enabled:
+	if is_instance_valid(current) and not current.enabled:
 		current = null
 	
 	if not current:

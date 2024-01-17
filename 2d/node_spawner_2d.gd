@@ -16,10 +16,13 @@ signal node_spawned(node)
 @export var random_rotation: float = 0
 @export var use_current_position: bool = true
 @export var use_current_rotation: bool = true
+@export var auto_respawn: bool = false
+@export var respawn_delay: float = 5
 
 @onready var timer := Timer.new()
 
 var _runs: int = 0
+var _nodes: Array[Node2D]
 
 func _ready() -> void:
 	if disabled:
@@ -65,6 +68,9 @@ func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
 	else:
 		get_tree().get_current_scene().add_child.call_deferred(node)
 	
+	node.tree_exited.connect(_on_node_tree_exited)
+	_nodes.append(node)
+	
 	await get_tree().process_frame
 	node_spawned.emit(node)
 
@@ -88,3 +94,7 @@ func start() -> void:
 
 func stop() -> void:
 	timer.stop()
+
+
+func _on_node_tree_exited() -> void:
+	_nodes.erase(null)
