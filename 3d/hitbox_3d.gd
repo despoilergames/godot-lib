@@ -10,9 +10,8 @@ signal damage_applied(amount)
 var _hit_reports: int = 0
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if _hit_reports:
-		prints(_hit_reports)
 		_hit_reports = 0
 
 

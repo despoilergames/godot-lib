@@ -1,4 +1,4 @@
-class_name NodeSpawner2D extends Marker2D
+class_name NodeSpawner3D extends Marker3D
 
 signal node_spawned(node)
 
@@ -12,8 +12,8 @@ signal node_spawned(node)
 @export var autostart: bool = false
 @export var max_runs: int = 0
 @export var parent_node: Node
-@export var random_offset: Vector2
-@export var random_rotation: float = 0
+@export var random_offset: Vector3
+@export var random_rotation: Vector3
 @export var use_current_position: bool = true
 @export var use_current_rotation: bool = true
 @export var auto_respawn: bool = false
@@ -22,7 +22,7 @@ signal node_spawned(node)
 @onready var timer := Timer.new()
 
 var _runs: int = 0
-var _nodes: Array[Node2D]
+var _nodes: Array[Node3D]
 
 func _ready() -> void:
 	if disabled:
@@ -75,16 +75,16 @@ func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
 	node_spawned.emit(node)
 
 
-func _create() -> Node2D:
+func _create() -> Node3D:
 	var node = scene.instantiate()
 	if use_current_position:
 		node.position = global_position
 	if use_current_rotation:
 		node.rotation = global_rotation
 	if not random_offset.is_zero_approx():
-		node.position += Vector2(randf_range(-random_offset.x, random_offset.y), randf_range(-random_offset.y, random_offset.y))
-	if not is_zero_approx(random_rotation):
-		node.rotation_degrees += randf_range(-random_rotation, random_rotation)
+		node.position += Vector3(randf_range(-random_offset.x, random_offset.y), randf_range(-random_offset.y, random_offset.y), randf_range(-random_offset.z, random_offset.z))
+	if not random_rotation.is_zero_approx():
+		node.rotation_degrees += Vector3(randf_range(-random_rotation.x, random_rotation.y), randf_range(-random_rotation.y, random_rotation.y), randf_range(-random_rotation.z, random_rotation.z))
 	return node
 
 
