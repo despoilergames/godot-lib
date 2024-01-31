@@ -8,6 +8,7 @@ enum ProcessType { IDLE, PHYSICS }
 @export var properties: PackedStringArray
 @export var process_type: ProcessType = ProcessType.IDLE
 @export var font_size: int = 0
+@export var text_align: HorizontalAlignment
 
 var _property_labels: Dictionary = {}
 var _signal_values: Dictionary = {}
@@ -51,11 +52,14 @@ func _render() -> void:
 			match type:
 				"int": property_value = "%d" % int(property_value)
 		var text_value = "%s: %s" % [property_label, property_value]
+		if property_label == "_":
+			text_value = "%s" % property_value
 		if _property_labels.has(property):
 			_property_labels.get(property).text = text_value
 		else:
 			var label = Label.new()
 			label.text = text_value
+			label.horizontal_alignment = text_align
 			if font_size:
 				label.set("theme_override_font_sizes/font_size", font_size)
 			add_child(label)
