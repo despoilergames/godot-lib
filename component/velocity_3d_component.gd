@@ -11,7 +11,7 @@ signal landed
 @export var gravity_scale: float = 1
 @export var landed_min_fall_time: float = 0.25
 
-@onready var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+@onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 
 var _fall_timer: float = 0:
@@ -41,9 +41,9 @@ func _physics_process(delta: float) -> void:
 		_fall_timer = 0
 	
 	if character.is_on_floor() or not is_zero_approx(air_control):
-		var _basis = basis_node.global_transform.basis
-		if zero_basis_x_rotation:
-			_basis
+		var _basis: Basis = basis_node.global_transform.basis
+		#if zero_basis_x_rotation:
+			#_basis
 		var _move_vector: Vector3 = _basis * move_vector
 		
 		var _momentum: float = (acceleration if move_vector else decceleration) * _acceleration_modifier
@@ -59,7 +59,7 @@ func _physics_process(delta: float) -> void:
 
 
 func get_momentum() -> float:
-	var momentum = super()
+	var momentum: float = super()
 	if not character.is_on_floor():
 		momentum *= air_control
 	return momentum

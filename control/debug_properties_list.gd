@@ -38,26 +38,26 @@ func _render() -> void:
 		global_position = follow_2d.global_position
 	
 	for property in properties:
-		var property_label = property
-		var type = "string"
+		var property_label: String = property
+		var type: String = "string"
 		if property.contains(":"):
-			var parts = property.split(":", true, 2)
+			var parts: PackedStringArray = property.split(":", true, 2)
 			property_label = parts[0]
 			property = parts[1]
 			if parts.size() == 3:
 				type = parts[2]
 		#var property_value = _get_deep(target, property)
-		var property_value = _get_property_value(property, type)
+		var property_value: Variant = _get_property_value(property, type)
 		if property_value != null:
 			match type:
 				"int": property_value = "%d" % int(property_value)
-		var text_value = "%s: %s" % [property_label, property_value]
+		var text_value: String = "%s: %s" % [property_label, property_value]
 		if property_label == "_":
 			text_value = "%s" % property_value
 		if _property_labels.has(property):
 			_property_labels.get(property).text = text_value
 		else:
-			var label = Label.new()
+			var label: Label = Label.new()
 			label.text = text_value
 			label.horizontal_alignment = text_align
 			if font_size:
@@ -78,10 +78,10 @@ func _get_property_value(key: String, type: String = "string") -> Variant:
 		_: return _get_deep(target, key)
 
 
-func _get_deep(element, key: String) -> Variant:
+func _get_deep(element: Variant, key: String) -> Variant:
 	if key.contains("."):
-		var keys = key.split(".", true, 1)
-		var child = element.get(keys[0])
+		var keys: PackedStringArray = key.split(".", true, 1)
+		var child: Variant = element.get(keys[0])
 		if child:
 			return _get_deep(child, keys[1])
 		else:
@@ -100,5 +100,5 @@ func _get_deep(element, key: String) -> Variant:
 		return null
 
 
-func _on_target_signal(value, property) -> void:
+func _on_target_signal(value: Variant, property: Variant) -> void:
 	_signal_values[property] = value

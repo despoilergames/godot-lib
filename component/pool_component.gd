@@ -1,9 +1,9 @@
 class_name PoolComponent extends Node
 
-signal changed(value)
+signal changed(value: float)
 signal depleted
-signal reduced(amount)
-signal increased(amount)
+signal reduced(amount: float)
+signal increased(amount: float)
 
 @export var value: float = 100:
 	set = set_value
@@ -39,7 +39,7 @@ func _ready() -> void:
 func set_value(amount: float) -> void:
 	if amount == value:
 		return
-	var _value = value
+	var _value: float = value
 	if max_value:
 		value = clampf(amount, 0.0, max_value)
 	else:
@@ -51,9 +51,9 @@ func set_value(amount: float) -> void:
 
 
 func add(amount: float) -> float:
-	var _before = value
+	var _before: float = value
 	value += amount
-	var _change = value - _before
+	var _change: float = value - _before
 	if _change:
 		increased.emit(_change)
 	return _change
@@ -61,9 +61,9 @@ func add(amount: float) -> float:
 
 func remove(amount: float) -> float:
 	interrupt_regen()
-	var _before = value
+	var _before: float = value
 	value -= amount
-	var _change = value - _before
+	var _change: float = value - _before
 	if _change:
 		reduced.emit(_change)
 	return _change
@@ -89,7 +89,7 @@ func stop_regen() -> void:
 
 
 func regen_tick() -> void:
-	var _max = max_value * max_regen_amount
+	var _max: float = max_value * max_regen_amount
 	
 	if value + regen_rate - _max < 0:
 		add(regen_rate)

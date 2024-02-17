@@ -6,7 +6,7 @@ enum Mode { SINGLE, DOUBLE, BURST, FULL_AUTO, SINGLE_ACTION, DOUBLE_ACTION }
 signal shot
 signal aim_added
 signal aim_removed
-signal recoiled(vector)
+signal recoiled(vector: Vector3)
 signal cycled
 signal cycle_started
 signal emptied
@@ -34,18 +34,18 @@ signal emptied
 @export var ammo_cost: int = 1
 @export var burst_amount: int = 3
 
-@onready var state = default_state
+@onready var state: State = default_state
 
-var state_name:
+var state_name: StringName:
 	get:
 		if state:
 			return State.keys()[state]
-		return null
+		return ""
 
 var _rpm: float
 var is_trigger_pulled: bool = false
 var mode: Mode
-var mode_name:
+var mode_name: StringName:
 	get:
 		return Mode.keys()[mode]
 
@@ -114,8 +114,8 @@ func next_mode() -> void:
 	if modes.size() <= 1:
 		return
 	
-	var _index = modes.find(mode)
-	var _next = _index + 1
+	var _index: int = modes.find(mode)
+	var _next: int = _index + 1
 	if _next >= modes.size():
 		_next = 0
 	mode = modes[_next]
@@ -125,8 +125,8 @@ func prev_mode() -> void:
 	if  modes.size() <= 1:
 		return
 	
-	var _index = modes.find(mode)
-	var _next = _index - 1
+	var _index: int = modes.find(mode)
+	var _next: int = _index - 1
 	if _next < 0:
 		_next = modes.size()
 	mode = modes[_next]

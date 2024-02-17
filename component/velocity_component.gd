@@ -8,9 +8,9 @@ class_name VelocityComponent extends Node
 @export var apply_move: bool = true
 
 var move_vector: Vector3
-var _modifiers = {}
+var _modifiers: Dictionary = {}
 var _modifier: float = 1
-var _acceleration_modifiers = {}
+var _acceleration_modifiers: Dictionary = {}
 var _acceleration_modifier: float = 1
 var _current_speed: float = 0
 
@@ -57,7 +57,7 @@ func remove_acceleration_modifier(key: StringName) -> void:
 
 
 func target_speed() -> float:
-	var _speed = speed * _modifier
+	var _speed: float = speed * _modifier
 	return _speed if move_vector else 0.0
 
 
@@ -70,7 +70,7 @@ func _apply_modifiers() -> void:
 
 func _apply_acceleration_modifiers() -> void:
 	if not _acceleration_modifiers.is_empty():
-		var _values = _acceleration_modifiers.values()
+		var _values: Array[float] = _acceleration_modifiers.values()
 		_values.sort()
 		_acceleration_modifier = _values.front()
 	else:
