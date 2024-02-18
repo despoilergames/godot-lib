@@ -83,6 +83,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func pull_trigger() -> void:
+	if disabled:
+		return
+	
 	if is_trigger_pulled:
 		return
 	

@@ -57,7 +57,7 @@ func event_is_action(event: InputEvent) -> bool:
 	return event.is_action(action_name)
 
 
-func process(delta: float) -> void:
+func process(_delta: float) -> void:
 	pass
 
 

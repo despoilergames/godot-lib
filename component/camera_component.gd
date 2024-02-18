@@ -6,8 +6,9 @@ enum ShakeIntensity { EXTRA_SMALL, SMALL, MEDIUM, LARGE, EXTRA_LARGE, MAX }
 @export var camera_3d: Camera3D
 @export var shake_max_stress: float = 1
 @export var shake_reduction: float = 0.1
+@export_range(0, 1, 0.01) var roll_amount: float = 0
 @export var use_offset: bool = true
-@export_exp_easing("attenuation", "positive_only") var shake_reduction_exp = 1.0
+@export_exp_easing("attenuation", "positive_only") var shake_reduction_exp: float = 1.0
 
 var _stress: float = 0
 var _constant: float = 0
@@ -128,7 +129,8 @@ func _shake_3d() -> void:
 		camera_3d.v_offset = randf_range(-_amount, _amount)
 	else:
 		camera_3d.position = Vector3(randf_range(-_amount, _amount), randf_range(-_amount, _amount), 0)
-	camera_3d.rotation.z = randf_range(-_amount, _amount) / 2
+	if roll_amount:
+		camera_3d.rotation.z = randf_range(-_amount, _amount) * roll_amount
 
 
 func get_shake_amount(intensity: ShakeIntensity) -> float:
