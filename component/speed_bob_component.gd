@@ -30,9 +30,9 @@ func _process(delta: float) -> void:
 	_time += delta * speed
 	
 	if curve and velocity_component.get_speed_percentage() > 0 and velocity_component.get_speed_percentage() != INF:
-		var _amount = curve.sample(velocity_component.get_speed_percentage())
+		var _amount: float = curve.sample(velocity_component.get_speed_percentage())
 		
-		var position_sin = Vector3(
+		var position_sin: Vector3 = Vector3(
 			sin(_time * position_speed.x),
 			sin(_time * position_speed.y),
 			sin(_time * position_speed.z)
@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
 		
 		position = position_amplitude * position_sin * _amount * position_multiplier
 		
-		var rotation_sin = Vector3(
+		var rotation_sin: Vector3 = Vector3(
 			sin(_time * rotation_speed.x),
 			sin(_time * rotation_speed.y),
 			sin(_time * rotation_speed.z)

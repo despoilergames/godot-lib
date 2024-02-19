@@ -28,10 +28,10 @@ func _follow(delta: float) -> void:
 	if disabled or not parent or not primary_target:
 		return
 	
-	var target = Vector2()
+	var target: Vector2 = Vector2()
 	if secondary_target:
 		target = primary_target.to_local(secondary_target.global_position) * follow_distance
-	var distance = target.length()
+	var distance: float = target.length()
 	
 	if max_distance and distance > max_distance:
 		target = target.normalized() * max_distance

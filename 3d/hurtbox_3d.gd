@@ -5,7 +5,7 @@ class_name Hurtbox3D extends Area3D
 @export var damage_on_enter: bool = true
 
 var _timer: Timer = Timer.new()
-var _areas = []
+var _areas: Array[Hitbox3D] = []
 
 func _ready() -> void:
 	_timer.wait_time = interval

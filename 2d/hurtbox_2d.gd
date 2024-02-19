@@ -5,7 +5,7 @@ class_name Hurtbox2D extends Area2D
 @export var damage_on_enter: bool = true
 
 var _timer: Timer
-var _areas = []
+var _areas: Array[Area2D] = []
 
 func _ready() -> void:
 	if interval:

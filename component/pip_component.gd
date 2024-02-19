@@ -1,6 +1,6 @@
 class_name PipComponent extends Node
 
-signal changed(value)
+signal changed(value: int)
 signal depleted
 
 @export var value: int = 10:
@@ -37,7 +37,7 @@ func _ready() -> void:
 func set_value(amount: int) -> void:
 		if amount == value:
 			return
-		var _value = value
+		var _value: int = value
 		if max_value:
 			value = clampi(amount, 0, max_value)
 		else:
@@ -49,13 +49,13 @@ func set_value(amount: int) -> void:
 
 
 func add(amount: int) -> int:
-	var _before = value
+	var _before: int = value
 	value += amount
 	return value - _before
 
 
 func remove(amount: int) -> int:
-	var _before = value
+	var _before: int = value
 	value -= amount
 	return value - _before
 
@@ -80,7 +80,7 @@ func stop_regen() -> void:
 
 
 func regen_tick() -> void:
-	var _max = max_value * max_regen_amount
+	var _max: int = max_value * max_regen_amount
 	
 	if value + regen_rate - _max >= 0:
 		add(int(regen_rate))

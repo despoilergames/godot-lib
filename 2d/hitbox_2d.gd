@@ -1,7 +1,7 @@
 class_name Hitbox2D extends Area2D
 
-signal hit(point, normal)
-signal damage_applied(amount)
+signal hit(point: Vector2, normal: Vector2)
+signal damage_applied(amount: float)
 
 @export var health_pip_component: HealthPipComponent
 @export var health_pool_component: HealthPoolComponent

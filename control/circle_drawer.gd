@@ -52,8 +52,8 @@ class_name CircleDrawer extends Control
 
 
 func _draw() -> void:
-	var _start_angle = TAU * start_position
-	var _end_angle = _start_angle + (TAU * length)
+	var _start_angle: float = TAU * start_position
+	var _end_angle: float = _start_angle + (TAU * length)
 	
 	if border_width:
 		if hollow:

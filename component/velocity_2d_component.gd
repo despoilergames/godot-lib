@@ -8,7 +8,7 @@ func _physics_process(delta: float) -> void:
 	if not character:
 		return
 	
-	var _momentum = get_momentum()
+	var _momentum: float = get_momentum()
 #	if _momentum >= 1:
 #		character.velocity = Vector2(move_vector.x, move_vector.z) * _current_speed
 #	else:

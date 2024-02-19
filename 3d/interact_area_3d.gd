@@ -8,7 +8,7 @@ signal completed
 signal tapped
 signal cancelled
 signal reset
-signal progress_percent_changed(percentage)
+signal progress_percent_changed(percentage: float)
 
 @export var label: StringName
 @export var hold_label: StringName
@@ -24,7 +24,7 @@ signal progress_percent_changed(percentage)
 
 var _is_focused: bool = false:
 	set(value):
-		var _old = _is_focused
+		var _old: bool = _is_focused
 		_is_focused = value
 		if value != _old:
 			if _is_focused:
@@ -38,7 +38,7 @@ var _is_focused: bool = false:
 					_progress_time = 0
 var _is_interacting: bool = false:
 	set(value):
-		var _old = _is_interacting
+		var _old: bool = _is_interacting
 		_is_interacting = value
 		if value != _old:
 			if _is_interacting:
@@ -52,7 +52,7 @@ var _is_interacting: bool = false:
 					_progress_time = 0
 var _is_completed: bool = false:
 	set(value):
-		var _old = _is_completed
+		var _old: bool = _is_completed
 		_is_completed = value
 		if value != _old:
 			if _is_completed:
@@ -65,7 +65,7 @@ var _is_completed: bool = false:
 				cancelled.emit()
 var _progress_time: float = 0:
 	set(value):
-		var _old = _progress_time
+		var _old: float = _progress_time
 		_progress_time = clamp(value, 0, complete_time)
 		if _progress_time != _old:
 			progress_percent_changed.emit(percent_complete)
@@ -76,7 +76,7 @@ var percent_complete: float = 0:
 		if complete_time:
 			return _progress_time / complete_time
 		return 0.0
-var focused_by
+var focused_by: Node
 
 
 func _physics_process(delta: float) -> void:
@@ -96,7 +96,7 @@ func _physics_process(delta: float) -> void:
 		#_is_completed = false
 
 
-func focus(_focused_by = null) -> void:
+func focus(_focused_by: InteractRayCast3D = null) -> void:
 	_is_focused = true
 	focused_by = _focused_by
 

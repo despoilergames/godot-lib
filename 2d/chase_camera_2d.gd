@@ -41,7 +41,7 @@ func _physics_process(_delta: float) -> void:
 		_weight = 1.0
 	
 	var i: int = 0
-	for target in targets:
+	for target: Node2D in targets:
 		if not is_instance_valid(target):
 			continue
 		if i == 0 and _using_first_position:

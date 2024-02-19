@@ -1,6 +1,6 @@
 class_name NodeSpawner2D extends Marker2D
 
-signal node_spawned(node)
+signal node_spawned(node: Node2D)
 
 @export var disabled: bool = false
 @export var scene: PackedScene
@@ -59,8 +59,8 @@ func spawn() -> void:
 
 
 func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
-	var node = _create()
-	for property in properties.keys():
+	var node: Node2D = _create()
+	for property: StringName in properties.keys():
 		node.set(property, properties.get(property))
 	
 	if parent_node:
@@ -76,7 +76,7 @@ func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
 
 
 func _create() -> Node2D:
-	var node = scene.instantiate()
+	var node: Node2D = scene.instantiate()
 	if use_current_position:
 		node.position = global_position
 	if use_current_rotation:

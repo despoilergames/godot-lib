@@ -1,6 +1,6 @@
 class_name NodeSpawner3D extends Marker3D
 
-signal node_spawned(node: Node)
+signal node_spawned(node: Node3D)
 
 @export var disabled: bool = false
 @export var scene: PackedScene

@@ -102,3 +102,7 @@ func regen_tick() -> void:
 
 func fill() -> void:
 	value = max_value
+
+
+func get_percentage() -> float:
+	return value / max_value

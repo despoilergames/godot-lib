@@ -6,7 +6,7 @@ class_name UUID extends Node
 const BYTE_MASK: int = 0b11111111
 
 
-static func uuidbin():
+static func uuidbin() -> Array:
 	# 16 random bytes with the bytes on index 6 and 8 modified
 	return [
 		randi() & BYTE_MASK, randi() & BYTE_MASK, randi() & BYTE_MASK, randi() & BYTE_MASK,
@@ -16,7 +16,7 @@ static func uuidbin():
 	]
 
 
-static func uuidbinrng(rng: RandomNumberGenerator):
+static func uuidbinrng(rng: RandomNumberGenerator) -> Array:
 	return [
 		rng.randi() & BYTE_MASK, rng.randi() & BYTE_MASK, rng.randi() & BYTE_MASK, rng.randi() & BYTE_MASK,
 		rng.randi() & BYTE_MASK, rng.randi() & BYTE_MASK, ((rng.randi() & BYTE_MASK) & 0x0f) | 0x40, rng.randi() & BYTE_MASK,
@@ -25,9 +25,9 @@ static func uuidbinrng(rng: RandomNumberGenerator):
 	]
 
 
-static func v4():
+static func v4() -> String:
 	# 16 random bytes with the bytes on index 6 and 8 modified
-	var b = uuidbin()
+	var b := uuidbin()
 	
 	return '%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x' % [
 		# low
@@ -47,9 +47,9 @@ static func v4():
 	]
 
 
-static func v4_rng(rng: RandomNumberGenerator):
+static func v4_rng(rng: RandomNumberGenerator) -> String:
 	# 16 random bytes with the bytes on index 6 and 8 modified
-	var b = uuidbinrng(rng)
+	var b := uuidbinrng(rng)
 
 	return '%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x' % [
 		# low
@@ -118,7 +118,7 @@ func as_string() -> String:
 	]
 
 
-func is_equal(other) -> bool:
+func is_equal(other: UUID) -> bool:
 	# Godot Engine compares Array recursively
 	# There's no need for custom comparison here.
 	return _uuid == other._uuid

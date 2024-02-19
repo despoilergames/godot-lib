@@ -1,12 +1,12 @@
 class_name HealthComponent extends Node
 
-signal changed(value)
+signal changed(value: float)
 signal depleted
 
 
-func add(value) -> void:
+func add(value: float) -> void:
 	pass
 
 
-func remove(value) -> void:
+func remove(value: float) -> void:
 	pass

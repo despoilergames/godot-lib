@@ -1,6 +1,6 @@
 class_name InteractRayCast3D extends RayCast3D
 
-signal target_gained(new_target)
+signal target_gained(new_target: InteractArea3D)
 signal target_lost
 
 @export var action_name: StringName
