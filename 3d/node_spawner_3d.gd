@@ -19,7 +19,8 @@ signal node_spawned(node: Node3D)
 @export var auto_respawn: bool = false
 @export var respawn_delay: float = 5
 
-@onready var timer := Timer.new()
+@onready var timer: Timer
+@onready var respawn_timer: Timer
 
 var _runs: int = 0
 var _nodes: Array[Node3D]
@@ -29,11 +30,20 @@ func _ready() -> void:
 		return
 	
 	if spawn_interval:
+		timer = Timer.new()
 		timer.autostart = false
 		timer.one_shot = false
 		timer.timeout.connect(spawn)
 		timer.wait_time = spawn_interval
 		add_child(timer)
+	
+	if respawn_delay:
+		respawn_timer = Timer.new()
+		respawn_timer.autostart = false
+		respawn_timer.one_shot = true
+		respawn_timer.timeout.connect(spawn)
+		respawn_timer.wait_time = respawn_delay
+		add_child(respawn_timer)
 	
 	if start_delay:
 		await get_tree().create_timer(start_delay).timeout
@@ -98,3 +108,5 @@ func stop() -> void:
 
 func _on_node_tree_exited() -> void:
 	_nodes.erase(null)
+	if respawn_delay:
+		respawn_timer.start()
