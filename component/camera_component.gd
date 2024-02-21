@@ -1,6 +1,6 @@
 class_name CameraComponent extends Node
 
-enum ShakeIntensity { EXTRA_SMALL, SMALL, MEDIUM, LARGE, EXTRA_LARGE, MAX }
+enum ShakeIntensity { __NONE__, MIN, EXTRA_SMALL, SMALL, MEDIUM, LARGE, EXTRA_LARGE, MAX }
 
 @export var camera_2d: Camera2D
 @export var camera_3d: Camera3D
@@ -34,6 +34,30 @@ func shake(intensity: ShakeIntensity) -> void:
 	shake_percentage(get_shake_amount(intensity))
 
 
+func shake_duration(intensity: ShakeIntensity, duration: float) -> void:
+	start_shake(intensity)
+	await get_tree().create_timer(duration).timeout
+	stop_shake()
+
+
+func shake_distance_3d(intensity: ShakeIntensity, origin: Vector3, max_distance: float, falloff_distance: float = 0.0) -> void:
+	shake_distance_percentage_3d(get_shake_amount(intensity), origin, max_distance, falloff_distance)
+
+
+func shake_distance_percentage_3d(amount: float, origin: Vector3, max_distance: float, falloff_distance: float = 0.0) -> void:
+	var _amount:=amount
+	var distance: float = camera_3d.global_position.distance_to(origin)
+	if distance > max_distance:
+		return
+	if distance > falloff_distance:
+		amount = clampf(amount * ((maxf(0, max_distance - falloff_distance) / maxf(0, distance - falloff_distance)) / max_distance), 0, 1)
+	shake_percentage(amount)
+
+
+func shake_min() -> void:
+	shake_percentage(get_shake_amount(ShakeIntensity.MIN))
+
+
 func shake_extra_small() -> void:
 	shake_percentage(get_shake_amount(ShakeIntensity.EXTRA_SMALL))
 
@@ -59,8 +83,10 @@ func shake_max() -> void:
 
 
 func shake_percentage(amount: float, allow_greater: bool = false) -> void:
+	if amount <= 0:
+		return
 	if allow_greater:
-		amount = maxf(0, amount)
+		amount = shake_max_stress * maxf(0, amount)
 	else:
 		amount = shake_max_stress * clampf(amount, 0, 1)
 	if amount > _stress:
@@ -69,6 +95,10 @@ func shake_percentage(amount: float, allow_greater: bool = false) -> void:
 
 func start_shake(intensity: ShakeIntensity) -> void:
 	start_shake_percentage(get_shake_amount(intensity))
+
+
+func start_shake_extra_min() -> void:
+	start_shake_percentage(get_shake_amount(ShakeIntensity.MIN))
 
 
 func start_shake_extra_small() -> void:
@@ -96,8 +126,10 @@ func start_shake_max() -> void:
 
 
 func start_shake_percentage(amount: float, allow_greater: bool = false) -> void:
+	if amount <= 0:
+		return
 	if allow_greater:
-		amount = maxf(0, amount)
+		amount = shake_max_stress * maxf(0, amount)
 	else:
 		amount = shake_max_stress * clampf(amount, 0, 1)
 	if amount > _constant:
@@ -134,8 +166,9 @@ func _shake_3d() -> void:
 
 
 func get_shake_amount(intensity: ShakeIntensity) -> float:
-	var _spread: float = 1.0 / 6
+	var _spread: float = 1.0 / 7
 	match intensity:
+		ShakeIntensity.MIN: return _spread
 		ShakeIntensity.EXTRA_SMALL: return _spread
 		ShakeIntensity.SMALL: return (_spread*2)
 		ShakeIntensity.MEDIUM: return (_spread*3)
