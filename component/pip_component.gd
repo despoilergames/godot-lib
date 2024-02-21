@@ -80,7 +80,7 @@ func stop_regen() -> void:
 
 
 func regen_tick() -> void:
-	var _max: int = max_value * max_regen_amount
+	var _max: int = int(max_value) * int(max_regen_amount)
 	
 	if value + regen_rate - _max >= 0:
 		add(int(regen_rate))
