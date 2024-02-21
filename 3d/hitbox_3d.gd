@@ -6,6 +6,7 @@ signal damage_applied(amount: float)
 @export var health_pip_component: HealthPipComponent
 @export var health_pool_component: HealthPoolComponent
 @export var max_hit_reports_per_frame: int = 0
+@export var rigid_body: RigidBody3D
 
 var _hit_reports: int = 0
 
@@ -39,3 +40,9 @@ func apply_hit(point: Vector3, normal: Vector3 = Vector3.ZERO) -> void:
 		return
 	hit.emit(point, normal)
 	_hit_reports += 1
+	
+
+
+func apply_impulse(impulse: Vector3, impulse_position: Vector3 = Vector3.ZERO) -> void:
+	if rigid_body:
+		rigid_body.apply_impulse(impulse, impulse_position)
