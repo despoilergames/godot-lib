@@ -7,6 +7,7 @@ signal damage_applied(amount: float)
 @export var health_pool_component: HealthPoolComponent
 @export var max_hit_reports_per_frame: int = 0
 @export var rigid_body: RigidBody3D
+@export var damage_modifier: float = 1
 
 var _hit_reports: int = 0
 
@@ -17,10 +18,19 @@ func _process(_delta: float) -> void:
 
 
 func apply_damage(amount: float) -> void:
+	amount *= damage_modifier
 	if health_pip_component:
 		health_pip_component.remove(int(amount))
 	if health_pool_component:
 		health_pool_component.remove(amount)
+
+
+func apply_heal(amount: float) -> float:
+	if health_pip_component:
+		return health_pip_component.add(int(amount))
+	if health_pool_component:
+		return health_pool_component.add(amount)
+	return 0
 
 
 func enable() -> void:
