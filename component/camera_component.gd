@@ -3,21 +3,29 @@ class_name CameraComponent extends Node
 enum ShakeIntensity { __NONE__, MIN, EXTRA_SMALL, SMALL, MEDIUM, LARGE, EXTRA_LARGE, MAX }
 
 @export var camera_2d: Camera2D
-@export var camera_3d: Camera3D
+@export var camera_3d: Camera3D:
+	set = set_camera_3d
 @export var shake_max_stress: float = 1
 @export var shake_reduction: float = 0.1
 @export_range(0, 1, 0.01) var roll_amount: float = 0
 @export var use_offset: bool = true
 @export_exp_easing("attenuation", "positive_only") var shake_reduction_exp: float = 1.0
 
+var base_fov: float
+
 var _stress: float = 0
 var _constant: float = 0
+var _fov_modifiers: Dictionary = {}
+var _fov_modifier: float = 1
 
 func _ready() -> void:
 	pass
 
 
 func _physics_process(delta: float) -> void:
+	if camera_3d:
+		camera_3d.fov = lerpf(camera_3d.fov, base_fov * _fov_modifier, delta * 5)
+	
 	if _constant and _constant > _stress:
 		_shake()
 		return
@@ -176,3 +184,27 @@ func get_shake_amount(intensity: ShakeIntensity) -> float:
 		ShakeIntensity.EXTRA_LARGE: return (_spread*5)
 		ShakeIntensity.MAX: return 1
 		_: return 0
+
+
+func set_camera_3d(camera: Camera3D) -> void:
+	if camera == camera_3d:
+		return
+	camera_3d = camera
+	base_fov = camera_3d.fov
+
+
+func add_fov_modifier(key: StringName, value: float) -> void:
+	_fov_modifiers[key] = value
+	_apply_modifiers()
+
+
+func remove_fov_modifier(key: StringName) -> void:
+	_fov_modifiers.erase(key)
+	_apply_modifiers()
+
+
+func _apply_modifiers() -> void:
+	if not _fov_modifiers.is_empty():
+		_fov_modifier = _fov_modifiers.values().min()
+	else:
+		_fov_modifier = 1
