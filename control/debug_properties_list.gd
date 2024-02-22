@@ -88,8 +88,10 @@ func _get_deep(element: Variant, key: String) -> Variant:
 			return child
 	else:
 		match key:
-			'length':
+			"length":
 				return element.length()
+			"size":
+				return element.size()
 		match typeof(element):
 			TYPE_VECTOR2:
 				return element.call(key)
