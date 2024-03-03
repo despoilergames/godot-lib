@@ -154,7 +154,7 @@ func change_state(new_state: State) -> void:
 				next_state = State.SHOOT
 		State.CYCLE:
 			cycle_started.emit()
-			await get_tree().create_timer(_rpm).timeout
+			await get_tree().create_timer(_rpm, false).timeout
 			cycled.emit()
 			# if no ammo goto empty state
 			if mode == Mode.BURST and _burst_count < burst_amount and ammo >= ammo_cost:

@@ -1,10 +1,19 @@
 class_name InputComponent extends Node
 
+enum ActionType {
+	PRESSED,
+	TAPPED,
+	DOUBLE_TAPPED,
+	HELD,
+	RELEASED
+}
+
 signal pressed(action_name: StringName)
 signal tapped(action_name: StringName)
 signal double_tapped(action_name: StringName)
 signal held(action_name: StringName)
 signal released(action_name: StringName)
+signal action_event(action_name: StringName, type: ActionType)
 
 @export var disabled: bool = false
 @export var actions: Array[InputComponentAction]
@@ -65,19 +74,24 @@ func get_vector(action_name: StringName, deadzone: float = -1.0) -> Vector2:
 
 func _on_action_pressed(action_name: StringName) -> void:
 	pressed.emit(action_name)
+	action_event.emit(action_name, ActionType.PRESSED)
 
 
 func _on_action_tapped(action_name: StringName) -> void:
 	tapped.emit(action_name)
+	action_event.emit(action_name, ActionType.TAPPED)
 
 
 func _on_action_double_tapped(action_name: StringName) -> void:
 	double_tapped.emit(action_name)
+	action_event.emit(action_name, ActionType.DOUBLE_TAPPED)
 
 
 func _on_action_held(action_name: StringName) -> void:
 	held.emit(action_name)
+	action_event.emit(action_name, ActionType.HELD)
 
 
 func _on_action_released(action_name: StringName) -> void:
 	released.emit(action_name)
+	action_event.emit(action_name, ActionType.RELEASED)
