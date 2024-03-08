@@ -107,6 +107,8 @@ func stop() -> void:
 
 
 func _on_node_tree_exited() -> void:
+	if not is_inside_tree():
+		return
 	_nodes.erase(null)
-	if respawn_delay:
+	if respawn_timer and is_instance_valid(respawn_timer):
 		respawn_timer.start()

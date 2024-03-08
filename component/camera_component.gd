@@ -18,12 +18,13 @@ var _constant: float = 0
 var _fov_modifiers: Dictionary = {}
 var _fov_modifier: float = 1
 
+
 func _ready() -> void:
 	pass
 
 
 func _physics_process(delta: float) -> void:
-	if camera_3d:
+	if camera_3d and is_instance_valid(camera_3d):
 		camera_3d.fov = lerpf(camera_3d.fov, base_fov * _fov_modifier, delta * 5)
 	
 	if _constant and _constant > _stress:
