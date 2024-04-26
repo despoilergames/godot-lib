@@ -14,3 +14,9 @@ func goto_next_scene() -> void:
 	if delay:
 		await get_tree().create_timer(delay).timeout
 	get_tree().change_scene_to_packed.call_deferred(next_scene)
+
+
+func goto_file(file: String) -> void:
+	if delay:
+		await get_tree().create_timer(delay).timeout
+	get_tree().change_scene_to_file.call_deferred(file)
