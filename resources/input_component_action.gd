@@ -45,6 +45,19 @@ func get_vector(deadzone: float = -1.0) -> Vector2:
 	return Vector2.ZERO
 
 
+func get_axis(deadzone: float = -1.0) -> float:
+	if vector_negative_x and vector_positive_x:
+		var _value = Input.get_axis(vector_negative_x, vector_positive_x)
+		if deadzone >= 0.0:
+			if _value > deadzone:
+				return _value
+			if _value < -deadzone:
+				return _value
+		else:
+			return _value
+	return 0.0
+
+
 func parse_event(event: InputEvent) -> void:
 	if not action_name or not event.is_action(action_name):
 		return

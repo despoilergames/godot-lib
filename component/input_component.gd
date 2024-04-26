@@ -72,6 +72,13 @@ func get_vector(action_name: StringName, deadzone: float = -1.0) -> Vector2:
 	return Vector2.ZERO
 
 
+func get_axis(action_name: StringName) -> float:
+	var action: InputComponentAction = get_action(action_name)
+	if action:
+		return action.get_axis()
+	return 0.0
+
+
 func _on_action_pressed(action_name: StringName) -> void:
 	pressed.emit(action_name)
 	action_event.emit(action_name, ActionType.PRESSED)
