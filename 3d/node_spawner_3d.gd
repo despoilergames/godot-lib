@@ -92,9 +92,9 @@ func _create() -> Node3D:
 	if use_current_rotation:
 		node.rotation = global_rotation
 	if not random_offset.is_zero_approx():
-		node.position += Vector3(randf_range(-random_offset.x, random_offset.y), randf_range(-random_offset.y, random_offset.y), randf_range(-random_offset.z, random_offset.z))
+		node.position += Vector3(randf_range(-random_offset.x, random_offset.x), randf_range(-random_offset.y, random_offset.y), randf_range(-random_offset.z, random_offset.z))
 	if not random_rotation.is_zero_approx():
-		node.rotation_degrees += Vector3(randf_range(-random_rotation.x, random_rotation.y), randf_range(-random_rotation.y, random_rotation.y), randf_range(-random_rotation.z, random_rotation.z))
+		node.rotation_degrees += Vector3(randf_range(-random_rotation.x, random_rotation.x), randf_range(-random_rotation.y, random_rotation.y), randf_range(-random_rotation.z, random_rotation.z))
 	return node
 
 
