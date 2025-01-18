@@ -4,7 +4,7 @@ class_name VelocityComponent extends Node
 	set = set_disabled
 @export var speed: float
 @export var acceleration: float
-@export var decceleration: float
+@export var deceleration: float
 @export var apply_move: bool = true
 
 var move_vector: Vector3
@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 
 
 func get_momentum() -> float:
-	return (acceleration if move_vector or is_zero_approx(decceleration) else decceleration) * _acceleration_modifier
+	return (acceleration if move_vector or is_zero_approx(deceleration) else deceleration) * _acceleration_modifier
 
 
 func set_disabled(value: bool) -> void:

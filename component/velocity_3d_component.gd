@@ -10,6 +10,7 @@ signal landed
 @export var jump_force: float = 10
 @export var gravity_scale: float = 1
 @export var landed_min_fall_time: float = 0.25
+@export var ignore_is_on_floor: bool = false
 
 @onready var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -32,23 +33,22 @@ func _physics_process(delta: float) -> void:
 	if disabled or not character:
 		return
 	
-	character.velocity.y -= gravity * delta * gravity_scale
+	if not is_zero_approx(gravity_scale):
+		character.velocity.y -= gravity * delta * gravity_scale
 	
-	if not character.is_on_floor():
+	if not ignore_is_on_floor and not character.is_on_floor():
 		if character.velocity.y < 0:
 			_fall_timer += delta
 	else:
 		_fall_timer = 0
 	
-	if character.is_on_floor() or not is_zero_approx(air_control):
+	if ignore_is_on_floor or character.is_on_floor() or not is_zero_approx(air_control):
 		var _basis: Basis = basis_node.global_transform.basis
 		#if zero_basis_x_rotation:
 			#_basis
 		var _move_vector: Vector3 = _basis * move_vector
 		
-		var _momentum: float = (acceleration if move_vector else decceleration) * _acceleration_modifier
-		if not character.is_on_floor():
-			_momentum *= air_control
+		var _momentum: float = get_momentum()
 		_current_speed = lerp(_current_speed, target_speed(), _momentum)
 		
 		character.velocity.x = lerp(character.velocity.x, _move_vector.x * _current_speed, _momentum)
@@ -60,7 +60,7 @@ func _physics_process(delta: float) -> void:
 
 func get_momentum() -> float:
 	var momentum: float = super()
-	if not character.is_on_floor():
+	if not ignore_is_on_floor and not character.is_on_floor():
 		momentum *= air_control
 	return momentum
 

@@ -18,12 +18,16 @@ signal node_spawned(node: Node3D)
 @export var use_current_rotation: bool = true
 @export var auto_respawn: bool = false
 @export var respawn_delay: float = 5
+@export var max_respawns: int = 0
+@export var remove_signal_name: String = "tree_exiting"
+@export var properties: Dictionary = {}
 
 @onready var timer: Timer
 @onready var respawn_timer: Timer
 
 var _runs: int = 0
 var _nodes: Array[Node3D]
+var _respawns: int = 0
 
 func _ready() -> void:
 	if disabled:
@@ -57,7 +61,7 @@ func _ready() -> void:
 
 func spawn() -> void:
 	for i in amount:
-		_spawn(i)
+		_spawn(i, properties)
 		if delay:
 			await get_tree().create_timer(delay).timeout
 	
@@ -68,17 +72,20 @@ func spawn() -> void:
 			timer.stop()
 
 
-func _spawn(_index: int = -1, properties: Dictionary = {}) -> void:
+func _spawn(_index: int = -1, _properties: Dictionary = {}) -> void:
 	var node: Node3D = _create()
-	for property: StringName in properties.keys():
-		node.set(property, properties.get(property))
+	for property: StringName in _properties.keys():
+		node.set(property, _properties.get(property))
 	
 	if parent_node:
 		parent_node.add_child.call_deferred(node)
 	else:
 		get_tree().get_current_scene().add_child.call_deferred(node)
 	
-	node.tree_exited.connect(_on_node_tree_exited)
+	if auto_respawn and remove_signal_name:
+		node.connect(remove_signal_name, _respawn)
+		# node.tree_exited.connect(_respawn)
+
 	_nodes.append(node)
 	
 	await get_tree().process_frame
@@ -106,9 +113,11 @@ func stop() -> void:
 	timer.stop()
 
 
-func _on_node_tree_exited() -> void:
+func _respawn() -> void:
 	if not is_inside_tree():
 		return
 	_nodes.erase(null)
 	if auto_respawn and respawn_timer and is_instance_valid(respawn_timer):
-		respawn_timer.start()
+		if max_respawns == 0 or _respawns < max_respawns:
+			respawn_timer.start()
+			_respawns += 1
