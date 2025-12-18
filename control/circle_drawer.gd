@@ -45,9 +45,9 @@ class_name CircleDrawer extends Control
 	set(value):
 		background_color = value
 		queue_redraw()
-@export var use_aliasing: bool = true:
+@export var antialiasing: bool = true:
 	set(value):
-		use_aliasing = value
+		antialiasing = value
 		queue_redraw()
 @export var hollow: bool = true:
 	set(value):
@@ -61,17 +61,17 @@ func _draw() -> void:
 	
 	if border_width:
 		if hollow:
-			draw_arc(Vector2.ZERO, radius, _start_angle, _end_angle, points, border_color, border_width, use_aliasing)
+			draw_arc(Vector2.ZERO, radius, _start_angle, _end_angle, points + 1, border_color, border_width, antialiasing)
 		else:
 			draw_circle(Vector2.ZERO, radius + border_width, border_color)
 	
 	if use_background:
 		if hollow:
-			draw_arc(Vector2.ZERO, radius, 0, TAU, points, background_color, background_width if background_width else width, use_aliasing)
+			draw_arc(Vector2.ZERO, radius, 0, TAU, points, background_color, background_width if background_width else width, antialiasing)
 		else:
 			draw_circle(Vector2.ZERO, radius, background_color)
 	
 	if hollow:
-		draw_arc(Vector2.ZERO, radius, _start_angle, _end_angle, points, color, width, use_aliasing)
+		draw_arc(Vector2.ZERO, radius, _start_angle, _end_angle, points + 1, color, width, antialiasing)
 	else:
 		draw_circle(Vector2.ZERO, radius, color)

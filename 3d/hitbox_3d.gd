@@ -35,13 +35,13 @@ func apply_heal(amount: float) -> float:
 
 func enable() -> void:
 	for child in get_children():
-		if child is CollisionShape2D:
+		if child is CollisionShape3D:
 			child.disabled = false
 
 
 func disable() -> void:
 	for child in get_children():
-		if child is CollisionShape2D:
+		if child is CollisionShape3D:
 			child.set_deferred("disabled", true)
 
 
