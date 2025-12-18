@@ -13,7 +13,7 @@ class_name CircleDrawer extends Control
 	set(value):
 		border_width = value
 		queue_redraw()
-@export_range(0, 1) var length: float = 1:
+@export_range(-1, 1) var length: float = 1:
 	set(value):
 		length = value
 		queue_redraw()

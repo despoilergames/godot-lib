@@ -20,6 +20,7 @@ signal node_spawned(node: Node3D)
 @export var respawn_delay: float = 5
 @export var max_respawns: int = 0
 @export var remove_signal_name: String = "tree_exiting"
+@export var arguments: Array
 @export var properties: Dictionary = {}
 
 @onready var timer: Timer
@@ -93,7 +94,7 @@ func _spawn(_index: int = -1, _properties: Dictionary = {}) -> void:
 
 
 func _create() -> Node3D:
-	var node: Node3D = scene.instantiate()
+	var node: Node3D = scene.callv(&"instantiate", arguments)
 	if use_current_position:
 		node.position = global_position
 	if use_current_rotation:

@@ -9,12 +9,12 @@ void fragment() {
 	float dx = intensity * ss.x;
 	float dy = intensity * ss.y;
 	vec4 sum = vec4(0.0);
-	
+
 	sum += -1.0 * texture(SCREEN_TEXTURE, uv + vec2( -1.0 * dx , 0.0 * dy));
 	sum += -1.0 * texture(SCREEN_TEXTURE, uv + vec2( 0.0 * dx , -1.0 * dy));
 	sum += 5.0 * texture(SCREEN_TEXTURE, uv + vec2( 0.0 * dx , 0.0 * dy));
 	sum += -1.0 * texture(SCREEN_TEXTURE, uv + vec2( 0.0 * dx , 1.0 * dy));
 	sum += -1.0 * texture(SCREEN_TEXTURE, uv + vec2( 1.0 * dx , 0.0 * dy));
-	
+
 	COLOR = sum;
 }

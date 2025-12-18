@@ -16,15 +16,18 @@ signal released(action_name: StringName)
 signal action_event(action_name: StringName, type: ActionType)
 
 @export var disabled: bool = false
-@export var actions: Array[InputComponentAction]
-
-var _actions: Dictionary = {}
-var _action_names: PackedStringArray = []
-var _timers: Dictionary = {}
+@export var device: int = -1
+@export var actions: Array[InputComponentAction] = []
 
 func _ready() -> void:
-	for action in actions:
-		_actions[action.get_id()] = action
+	if device >= 0:
+		var _actions: Array[InputComponentAction] = []
+		for action: InputComponentAction in actions:
+			_actions.append(action.duplicate(true))
+		actions = _actions
+
+	for action: InputComponentAction in actions:
+		action.device = device
 		if action.action_name:
 			action.pressed.connect(_on_action_pressed.bind(action.action_name))
 			action.tapped.connect(_on_action_tapped.bind(action.action_name))
@@ -37,15 +40,20 @@ func _unhandled_input(event: InputEvent) -> void:
 	if disabled:
 		return
 	
+	if device >= 0 and event.device != device:
+		return
+	
 	for action: InputComponentAction in actions:
 		if not action.event_is_action(event):
 			continue
-		
 		action.parse_event(event)
 		get_viewport().set_input_as_handled()
+		return
 
 
 func _process(delta: float) -> void:
+	if disabled or not is_node_ready():
+		return
 	for action in actions:
 		action.process(delta)
 
@@ -55,10 +63,17 @@ func add_action(action: InputComponentAction) -> void:
 
 
 func get_action(action_name: StringName) -> InputComponentAction:
-	return _actions.get(action_name)
+	if disabled:
+		return null
+	for action: InputComponentAction in actions:
+		if action.get_id() == action_name:
+			return action
+	return null
 
 
 func is_pressed(action_name: StringName) -> bool:
+	if disabled:
+		return false
 	var action: InputComponentAction = get_action(action_name)
 	if action:
 		return action.is_pressed
@@ -66,6 +81,8 @@ func is_pressed(action_name: StringName) -> bool:
 
 
 func get_vector(action_name: StringName, deadzone: float = -1.0) -> Vector2:
+	if disabled:
+		return Vector2.ZERO
 	var action: InputComponentAction = get_action(action_name)
 	if action:
 		return action.get_vector(deadzone)
@@ -73,6 +90,8 @@ func get_vector(action_name: StringName, deadzone: float = -1.0) -> Vector2:
 
 
 func get_axis(action_name: StringName) -> float:
+	if disabled:
+		return 0.0
 	var action: InputComponentAction = get_action(action_name)
 	if action:
 		return action.get_axis()

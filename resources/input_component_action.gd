@@ -22,7 +22,8 @@ var is_pressed: bool = false:
 
 var pressed_time: float = 0
 var held_time: float = 0
-
+var device: int = -1
+var vector: Vector2 = Vector2.ZERO
 
 func _init(_name: StringName = &"", _action_name: StringName = &"") -> void:
 	if _name:
@@ -40,34 +41,53 @@ func get_is_pressed() -> bool:
 
 
 func get_vector(deadzone: float = -1.0) -> Vector2:
-	if vector_negative_x and vector_positive_x and vector_negative_y and vector_positive_y:
-		return Input.get_vector(vector_negative_x, vector_positive_x, vector_negative_y, vector_positive_y, deadzone if deadzone else vector_deadzone)
+	if deadzone < 0:
+		deadzone = vector_deadzone
+	if vector.length() >= deadzone:
+		return vector
 	return Vector2.ZERO
 
 
-func get_axis(deadzone: float = -1.0) -> float:
-	if vector_negative_x and vector_positive_x:
-		var _value = Input.get_axis(vector_negative_x, vector_positive_x)
-		if deadzone >= 0.0:
-			if _value > deadzone:
-				return _value
-			if _value < -deadzone:
-				return _value
-		else:
-			return _value
+func get_x_axis(deadzone: float = -1.0) -> float:
+	if deadzone < 0:
+		deadzone = vector_deadzone
+	if abs(vector.x) >= deadzone:
+		return vector.x
+	return 0.0
+
+
+func get_y_axis(deadzone: float = -1.0) -> float:
+	if deadzone < 0:
+		deadzone = vector_deadzone
+	if abs(vector.y) >= deadzone:
+		return vector.y
 	return 0.0
 
 
 func parse_event(event: InputEvent) -> void:
-	if not action_name or not event.is_action(action_name):
+	if not event_is_action(event):
 		return
 	is_pressed = event.is_pressed()
+	if vector_negative_x and event.is_action(vector_negative_x, true):
+		vector.x = -event.get_action_strength(vector_negative_x)
+	elif vector_positive_x and event.is_action(vector_positive_x, true):
+		vector.x = event.get_action_strength(vector_positive_x)
+	if vector_negative_y and event.is_action(vector_negative_y, true):
+		vector.y = -event.get_action_strength(vector_negative_y)
+	elif vector_positive_y and event.is_action(vector_positive_y, true):
+		vector.y = event.get_action_strength(vector_positive_y)
 
 
 func event_is_action(event: InputEvent) -> bool:
-	if not action_name:
+	if device != -1 and event.device != device:
 		return false
-	return event.is_action(action_name)
+	if action_name:
+		return event.is_action(action_name)
+	else:
+		for action in [vector_negative_x, vector_positive_x, vector_negative_y, vector_positive_y]:
+			if action and event.is_action(action, true):
+				return true
+	return false
 
 
 func process(_delta: float) -> void:

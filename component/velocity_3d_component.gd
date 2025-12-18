@@ -3,7 +3,13 @@ class_name Velocity3DComponent extends VelocityComponent
 signal jumped
 signal landed
 
-@export var character: CharacterBody3D
+@export var character: CharacterBody3D:
+	set(value):
+		if value == character:
+			return
+		character = value
+		if not basis_node:
+			basis_node = character
 @export var basis_node: Node3D
 @export var zero_basis_x_rotation: bool = false
 @export var air_control: float = 0
@@ -30,19 +36,19 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 #	super(delta)
 	
-	if disabled or not character:
+	if disabled or not character or not basis_node:
 		return
 	
 	if not is_zero_approx(gravity_scale):
 		character.velocity.y -= gravity * delta * gravity_scale
 	
-	if not ignore_is_on_floor and not character.is_on_floor():
+	if character.motion_mode == CharacterBody3D.MOTION_MODE_GROUNDED and not ignore_is_on_floor and not character.is_on_floor():
 		if character.velocity.y < 0:
 			_fall_timer += delta
 	else:
 		_fall_timer = 0
 	
-	if ignore_is_on_floor or character.is_on_floor() or not is_zero_approx(air_control):
+	if character.motion_mode == CharacterBody3D.MOTION_MODE_FLOATING or ignore_is_on_floor or character.is_on_floor() or not is_zero_approx(air_control):
 		var _basis: Basis = basis_node.global_transform.basis
 		#if zero_basis_x_rotation:
 			#_basis
@@ -60,7 +66,7 @@ func _physics_process(delta: float) -> void:
 
 func get_momentum() -> float:
 	var momentum: float = super()
-	if not ignore_is_on_floor and not character.is_on_floor():
+	if character.motion_mode == CharacterBody3D.MOTION_MODE_GROUNDED and not ignore_is_on_floor and not character.is_on_floor():
 		momentum *= air_control
 	return momentum
 
