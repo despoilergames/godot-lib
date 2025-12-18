@@ -14,12 +14,21 @@ signal double_tapped(action_name: StringName)
 signal held(action_name: StringName)
 signal released(action_name: StringName)
 signal action_event(action_name: StringName, type: ActionType)
+signal actions_registered
 
 @export var disabled: bool = false
 @export var device: int = -1
 @export var actions: Array[InputComponentAction] = []
+@export var disable_accumulation: bool = true
+@export var actions: Array[InputComponentAction]
+
+var _actions: Dictionary = {}
+var _action_names: PackedStringArray = []
+var _timers: Dictionary = {}
 
 func _ready() -> void:
+	if disable_accumulation:
+		Input.set_use_accumulated_input(false)
 	if device >= 0:
 		var _actions: Array[InputComponentAction] = []
 		for action: InputComponentAction in actions:
@@ -28,12 +37,14 @@ func _ready() -> void:
 
 	for action: InputComponentAction in actions:
 		action.device = device
+		_actions[action.get_id()] = action
 		if action.action_name:
 			action.pressed.connect(_on_action_pressed.bind(action.action_name))
 			action.tapped.connect(_on_action_tapped.bind(action.action_name))
 			action.double_tapped.connect(_on_action_double_tapped.bind(action.action_name))
 			action.held.connect(_on_action_held.bind(action.action_name))
 			action.released.connect(_on_action_released.bind(action.action_name))
+	actions_registered.emit()
 
 
 func _unhandled_input(event: InputEvent) -> void:

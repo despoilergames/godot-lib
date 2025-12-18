@@ -9,6 +9,10 @@ class_name CircleDrawer extends Control
 	set(value):
 		width = value
 		queue_redraw()
+@export var background_width: float = 0:
+	set(value):
+		background_width = value
+		queue_redraw()
 @export var border_width: float = 0:
 	set(value):
 		border_width = value
@@ -63,7 +67,7 @@ func _draw() -> void:
 	
 	if use_background:
 		if hollow:
-			draw_arc(Vector2.ZERO, radius, 0, TAU, points + 1, background_color, width, antialiasing)
+			draw_arc(Vector2.ZERO, radius, 0, TAU, points, background_color, background_width if background_width else width, antialiasing)
 		else:
 			draw_circle(Vector2.ZERO, radius, background_color)
 	

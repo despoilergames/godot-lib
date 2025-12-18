@@ -6,6 +6,9 @@ class_name RecoilComponent extends Node
 @export var recoil_x_target_node: Node3D
 @export var recoil_y_target_node: Node3D
 @export var soft_recoil_target_node: Node3D
+@export var modifier: float = 1
+@export var soft_modifier: float = 1
+
 
 var recoil_vector: Vector3:
 	set(value):
@@ -27,13 +30,13 @@ var soft_recoil_vector: Vector3:
 var _recoil_tween: Tween
 
 
-func add_recoil(vector: Vector3, duration: float = 0.0) -> void:
+func add_recoil(vector: Vector3, duration: float = 0.0, soft_recoil: float = 1.0) -> void:
 	duration = clampf(duration, min_duration, max_duration)
 	
 	recoil_vector = Vector3.ZERO
 	
 	if is_zero_approx(duration) or is_inf(duration):
-		recoil_vector = vector
+		recoil_vector = vector * modifier
 		recoil_vector = Vector3.ZERO
 		return
 	
@@ -41,8 +44,8 @@ func add_recoil(vector: Vector3, duration: float = 0.0) -> void:
 		_recoil_tween.kill()
 	
 	_recoil_tween = create_tween().set_ease(Tween.EASE_OUT).set_process_mode(Tween.TWEEN_PROCESS_PHYSICS).set_parallel(true)
-	_recoil_tween.tween_property(self, "recoil_vector", vector, duration)
-	_recoil_tween.tween_property(self, "soft_recoil_vector", vector, duration / 2)
+	_recoil_tween.tween_property(self, "recoil_vector", vector * modifier, duration)
+	_recoil_tween.tween_property(self, "soft_recoil_vector", vector * soft_modifier * soft_recoil, duration / 2)
 	_recoil_tween.tween_property(self, "soft_recoil_vector", Vector3.ZERO, duration / 2).set_delay(duration / 2)
 	_recoil_tween.play()
 	await _recoil_tween.finished

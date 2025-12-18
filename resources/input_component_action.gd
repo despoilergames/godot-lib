@@ -4,12 +4,14 @@ signal pressed
 signal tapped
 signal double_tapped
 signal held
+signal held_released
 signal released
 
 @export var name: StringName
 @export var action_name: StringName
 @export var report_tap: bool = false
 @export var report_hold: bool = false
+@export var tap_timeout: float = 0.25
 
 @export var vector_negative_x: StringName
 @export var vector_positive_x: StringName
@@ -24,6 +26,8 @@ var pressed_time: float = 0
 var held_time: float = 0
 var device: int = -1
 var vector: Vector2 = Vector2.ZERO
+var held_reported: bool = true
+
 
 func _init(_name: StringName = &"", _action_name: StringName = &"") -> void:
 	if _name:
@@ -90,8 +94,14 @@ func event_is_action(event: InputEvent) -> bool:
 	return false
 
 
-func process(_delta: float) -> void:
-	pass
+func process(delta: float) -> void:
+	if not report_hold:
+		return
+	if is_pressed:
+		pressed_time += delta
+	if not held_reported and pressed_time >= tap_timeout:
+		held.emit()
+		held_reported = true
 
 
 func set_is_pressed(value: bool) -> void:
@@ -101,5 +111,11 @@ func set_is_pressed(value: bool) -> void:
 	is_pressed = value
 	if is_pressed:
 		pressed.emit()
+		pressed_time = 0
+		held_reported = false
 	else:
 		released.emit()
+		if report_tap and pressed_time < tap_timeout:
+			tapped.emit()
+		if report_hold and pressed_time >= tap_timeout:
+			held_released.emit()
