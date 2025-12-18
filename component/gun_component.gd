@@ -19,9 +19,9 @@ signal emptied
 	set(value):
 		rpm = value
 		if rpm:
-			_rpm = clampf(60.0 / rpm, get_physics_process_delta_time(), 10)
+			cycle_time = clampf(60.0 / rpm, get_physics_process_delta_time(), 10)
 		else:
-			_rpm = get_physics_process_delta_time()
+			cycle_time = get_physics_process_delta_time()
 @export var modes: Array[Mode]:
 	set(value):
 		modes = value
@@ -42,7 +42,7 @@ var state_name: StringName:
 			return State.keys()[state]
 		return ""
 
-var _rpm: float
+var cycle_time: float
 var is_trigger_pulled: bool = false
 var mode: Mode
 var mode_name: StringName:
@@ -55,8 +55,8 @@ var _burst_count: int = 0
 
 
 func _ready() -> void:
-	if not _rpm:
-		_rpm = get_physics_process_delta_time()
+	if not cycle_time:
+		cycle_time = get_physics_process_delta_time()
 
 
 func _process(delta: float) -> void:
@@ -154,7 +154,7 @@ func change_state(new_state: State) -> void:
 				next_state = State.SHOOT
 		State.CYCLE:
 			cycle_started.emit()
-			await get_tree().create_timer(_rpm, false).timeout
+			await get_tree().create_timer(cycle_time, false).timeout
 			cycled.emit()
 			# if no ammo goto empty state
 			if mode == Mode.BURST and _burst_count < burst_amount and ammo >= ammo_cost:
